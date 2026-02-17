@@ -1,0 +1,32 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+deployment-logs
+
+# Go
+vendor/
+
+# Environment
+.env
+
+# Database
+*.db
+*.sqlite
+
+# Git repos cloned by the service
+repos/
+
+# Frontend
+node_modules/
+web/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
