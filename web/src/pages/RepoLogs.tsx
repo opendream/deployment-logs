@@ -76,7 +76,7 @@ export default function RepoLogs() {
     if (!repoName || !branch) return
     setLoading(true)
     const params = new URLSearchParams({ branch, page: String(page) })
-    apiFetch(apiUrl(`/api/logs/repo/${encodeURIComponent(repoName)}?${params}`), { headers: apiHeaders(token) })
+    apiFetch(apiUrl(`/api/logs/repo/${encodeURIComponent(repoName)}?${params}`), { headers: apiHeaders(token) }, { noRedirect: true })
       .then(r => r.json())
       .then((data: PaginatedResponse) => setResponse(data))
       .catch(console.error)
@@ -87,7 +87,7 @@ export default function RepoLogs() {
 
   useEffect(() => {
     if (!repoName) return
-    apiFetch(apiUrl('/api/repos'), { headers: apiHeaders(token) })
+    apiFetch(apiUrl('/api/repos'), { headers: apiHeaders(token) }, { noRedirect: true })
       .then(r => r.json())
       .then((repos: any[]) => {
         const repo = repos.find((r: any) => r.name === repoName)

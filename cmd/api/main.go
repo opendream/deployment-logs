@@ -65,19 +65,17 @@ func main() {
 	app.Get(bp+"/api/public/logs/repo/:repo_name", handlers.GetLogsByRepo(db))
 	app.Post(bp+"/api/public/trigger", middleware.APIKeyAuth(cfg), handlers.Trigger(db, cfg))
 
+	// Public read routes (with optional auth so frontend knows if user is admin)
+	optAuth := app.Group(bp+"/api", middleware.OptionalJWTAuth(cfg.JWTSecret))
+	optAuth.Get("/auth/me", handlers.Me())
+	optAuth.Get("/repos", handlers.ListRepos(db))
+	optAuth.Get("/repos/:id", handlers.GetRepo(db))
+	optAuth.Get("/logs", handlers.ListLogs(db))
+	optAuth.Get("/logs/repo/:repo_name", handlers.GetLogsByRepo(db))
+	optAuth.Get("/logs/:id", handlers.GetLog(db))
+
 	// Authenticated routes
 	api := app.Group(bp+"/api", middleware.JWTAuth(cfg.JWTSecret))
-
-	api.Get("/auth/me", handlers.Me())
-
-	repos := api.Group("/repos")
-	repos.Get("/", handlers.ListRepos(db))
-	repos.Get("/:id", handlers.GetRepo(db))
-
-	logs := api.Group("/logs")
-	logs.Get("/", handlers.ListLogs(db))
-	logs.Get("/repo/:repo_name", handlers.GetLogsByRepo(db))
-	logs.Get("/:id", handlers.GetLog(db))
 
 	admin := api.Group("", middleware.RequireAdmin())
 

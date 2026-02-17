@@ -30,14 +30,16 @@ function App() {
         <Container size="md" h="100%">
           <Group h="100%" gap="lg" justify="space-between">
             <Group gap="lg">
-              {token && <Anchor component={Link} to="/repos" fw={600} size="sm">Repositories</Anchor>}
+              <Anchor component={Link} to="/repos" fw={600} size="sm">Repositories</Anchor>
               {token && isAdmin && <Anchor component={Link} to="/settings" fw={600} size="sm">Settings</Anchor>}
             </Group>
-            {token && user && (
+            {token && user ? (
               <Group gap="sm">
                 <Text size="sm" c="dimmed">{user.username} ({user.role})</Text>
                 <Button size="compact-xs" variant="subtle" onClick={handleLogout}>Logout</Button>
               </Group>
+            ) : (
+              <Anchor component={Link} to="/login" size="sm">Login</Anchor>
             )}
           </Group>
         </Container>
@@ -48,10 +50,10 @@ function App() {
             <Route path="/public/:repoName/:branch" element={<PublicRepoLogs />} />
             <Route path="/login" element={token ? <Navigate to="/repos" replace /> : <Login />} />
             <Route path="/" element={<Navigate to="/repos" replace />} />
-            <Route path="/repos" element={<AuthGuard><RepoList /></AuthGuard>} />
+            <Route path="/repos" element={<RepoList />} />
             <Route path="/repos/new" element={<AuthGuard><RepoForm /></AuthGuard>} />
             <Route path="/repos/:id/edit" element={<AuthGuard><RepoForm /></AuthGuard>} />
-            <Route path="/repos/:repoName/logs/:branch" element={<AuthGuard><RepoLogs /></AuthGuard>} />
+            <Route path="/repos/:repoName/logs/:branch" element={<RepoLogs />} />
             <Route path="/settings" element={<AuthGuard><Settings /></AuthGuard>} />
           </Routes>
         </Container>

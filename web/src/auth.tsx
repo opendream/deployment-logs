@@ -62,9 +62,9 @@ export function apiUrl(path: string): string {
   return getBasePath() + path
 }
 
-export function apiFetch(input: string, init?: RequestInit): Promise<Response> {
+export function apiFetch(input: string, init?: RequestInit, options?: { noRedirect?: boolean }): Promise<Response> {
   return fetch(input, init).then(resp => {
-    if (resp.status === 401) {
+    if (resp.status === 401 && !options?.noRedirect) {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       window.location.href = getBasePath() + '/login'

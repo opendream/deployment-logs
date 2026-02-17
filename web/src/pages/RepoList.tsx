@@ -41,7 +41,7 @@ export default function RepoList() {
   const [configs, setConfigs] = useState<Config[]>([])
 
   const fetchConfigs = () => {
-    apiFetch(apiUrl('/api/repos'), { headers: apiHeaders(token) })
+    apiFetch(apiUrl('/api/repos'), { headers: apiHeaders(token) }, { noRedirect: true })
       .then(r => r.json())
       .then(setConfigs)
       .catch(console.error)
