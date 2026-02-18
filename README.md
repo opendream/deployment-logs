@@ -104,7 +104,7 @@ All endpoints are under `/api`. Authentication is required when `ADMIN_PASSWORD`
 ```bash
 curl -X POST http://localhost:4900/api/trigger \
   -H "Content-Type: application/json" \
-  -d '{"repo_name": "my-repo", "environment": "production"}'
+  -d '{"repo_name": "my-repo", "branch": "main"}'
 ```
 
 ### Build frontend for production
