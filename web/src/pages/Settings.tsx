@@ -80,7 +80,7 @@ export default function Settings() {
           <Stack gap="sm">
             <Text fw={600} size="sm">Trigger API Key</Text>
             <Text size="xs" c="dimmed">
-              External systems can trigger log generation via <Code>POST /api/public/trigger</Code>.
+              External systems can trigger log generation via <Code>POST /api/trigger</Code>.
               When an API key is set, requests must include <Code>X-API-Key</Code> header. If empty, the endpoint is open.
             </Text>
             {maskedKey && (
