@@ -97,7 +97,7 @@ All endpoints are under `/api`. Admin endpoints require JWT authentication (logi
 |--------|------|------|-------------|
 | POST | `/api/auth/login` | None | Login with admin password |
 | GET | `/api/public/logs/repo/:repo_name` | None | View logs for a repo |
-| POST | `/api/public/trigger` | `X-API-Key` | Trigger log generation (public) |
+| POST | `/api/public/trigger` | `X-API-Key` (if set) | Trigger log generation (public if no key configured) |
 | GET | `/api/repos` | None | List repositories |
 | GET | `/api/logs` | None | List logs (filter: `?repo=X&env=Y`) |
 | GET | `/api/logs/:id` | None | Get log with items |
