@@ -130,6 +130,16 @@ curl -X POST http://localhost:4900/api/public/trigger \
   -d '{"repo_name": "my-repo", "branch": "main"}'
 ```
 
+### Build & Publish Docker Image
+
+```bash
+# One-time setup: create a multi-platform buildx builder
+make setup
+
+# Build and push multi-platform image (linux/amd64 + linux/arm64)
+make build
+```
+
 ### Build frontend for production
 
 ```bash
