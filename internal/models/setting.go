@@ -16,6 +16,10 @@ func GetSetting(db *gorm.DB, key string) (string, error) {
 }
 
 func SetSetting(db *gorm.DB, key, value string) error {
-	s := Setting{Key: key, Value: value}
-	return db.Save(&s).Error
+	var existing Setting
+	result := db.Where("key = ?", key).First(&existing)
+	if result.Error == nil {
+		return db.Model(&existing).Update("value", value).Error
+	}
+	return db.Create(&Setting{Key: key, Value: value}).Error
 }
