@@ -13,7 +13,8 @@ func APIKeyAuth(db *gorm.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		appKey, err := models.GetSetting(db, "app_key")
 		if err != nil || appKey == "" {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "API key not configured"})
+			// No API key configured — allow public access
+			return c.Next()
 		}
 		key := c.Get("X-API-Key")
 		if key == "" || key != appKey {
