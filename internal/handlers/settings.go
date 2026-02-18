@@ -1,25 +1,27 @@
 package handlers
 
 import (
-	"deployment-logs/internal/config"
+	"deployment-logs/internal/models"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
-func GetSettings(cfg *config.Config) fiber.Handler {
+func GetSettings(db *gorm.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		appKey, _ := models.GetSetting(db, "app_key")
 		masked := ""
-		if len(cfg.AppKey) > 4 {
-			masked = strings.Repeat("*", len(cfg.AppKey)-4) + cfg.AppKey[len(cfg.AppKey)-4:]
-		} else if len(cfg.AppKey) > 0 {
-			masked = strings.Repeat("*", len(cfg.AppKey))
+		if len(appKey) > 4 {
+			masked = strings.Repeat("*", len(appKey)-4) + appKey[len(appKey)-4:]
+		} else if len(appKey) > 0 {
+			masked = strings.Repeat("*", len(appKey))
 		}
 		return c.JSON(fiber.Map{"app_key": masked})
 	}
 }
 
-func UpdateSettings(cfg *config.Config) fiber.Handler {
+func UpdateSettings(db *gorm.DB) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var body struct {
 			AppKey string `json:"app_key"`
@@ -27,7 +29,9 @@ func UpdateSettings(cfg *config.Config) fiber.Handler {
 		if err := c.BodyParser(&body); err != nil {
 			return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 		}
-		cfg.AppKey = body.AppKey
+		if err := models.SetSetting(db, "app_key", body.AppKey); err != nil {
+			return c.Status(500).JSON(fiber.Map{"error": "failed to save setting"})
+		}
 		return c.JSON(fiber.Map{"message": "updated"})
 	}
 }

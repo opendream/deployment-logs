@@ -77,7 +77,7 @@ func Setup(cfg *config.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&models.RepositoryConfig{}, &models.DeploymentLog{}, &models.LogItem{}, &models.User{})
+	err = db.AutoMigrate(&models.RepositoryConfig{}, &models.DeploymentLog{}, &models.LogItem{}, &models.User{}, &models.Setting{})
 	if err != nil {
 		return nil, err
 	}

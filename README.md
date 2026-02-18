@@ -49,6 +49,8 @@ Edit `.env` as needed:
 | `JWT_SECRET` | JWT signing secret | |
 | `BASE_PATH` | URL base path for reverse proxy setups | |
 
+> **Note:** The API key for the public trigger endpoint is managed via the admin Settings UI (stored in the database), not through environment variables.
+
 ### 3. Run locally
 
 **Backend:**
@@ -87,23 +89,44 @@ Open `http://localhost:4900` (Docker) or `http://localhost:5173` (dev mode) to a
 
 ### API
 
-All endpoints are under `/api`. Authentication is required when `ADMIN_PASSWORD` is set.
+All endpoints are under `/api`. Admin endpoints require JWT authentication (login with `ADMIN_PASSWORD`).
+
+**Public endpoints:**
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/auth/login` | None | Login with admin password |
+| GET | `/api/public/logs/repo/:repo_name` | None | View logs for a repo |
+| POST | `/api/public/trigger` | `X-API-Key` | Trigger log generation (public) |
+| GET | `/api/repos` | None | List repositories |
+| GET | `/api/logs` | None | List logs (filter: `?repo=X&env=Y`) |
+| GET | `/api/logs/:id` | None | Get log with items |
+
+**Admin endpoints (JWT required):**
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/api/configs` | List all repo configs |
-| POST | `/api/configs` | Create repo config |
-| PUT | `/api/configs/:id` | Update repo config |
-| DELETE | `/api/configs/:id` | Delete repo config |
+| POST | `/api/repos` | Create repo config |
+| PUT | `/api/repos/:id` | Update repo config |
+| DELETE | `/api/repos/:id` | Delete repo config |
 | POST | `/api/trigger` | Trigger log generation |
-| GET | `/api/logs` | List logs (filter: `?repo=X&env=Y`) |
-| GET | `/api/logs/:id` | Get log with items |
+| DELETE | `/api/logs/repo/:repo_name` | Clear logs for a repo |
+| GET | `/api/settings` | Get app settings |
+| PUT | `/api/settings` | Update app settings (API key) |
 
-**Trigger example:**
+**Public trigger example:**
 
 ```bash
-curl -X POST http://localhost:4900/api/trigger \
+# First, set the API key via admin settings UI or API
+curl -X PUT http://localhost:4900/api/settings \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <jwt-token>" \
+  -d '{"app_key": "my-secret-key"}'
+
+# Then trigger using the API key
+curl -X POST http://localhost:4900/api/public/trigger \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: my-secret-key" \
   -d '{"repo_name": "my-repo", "branch": "main"}'
 ```
 

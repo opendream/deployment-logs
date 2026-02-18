@@ -15,7 +15,6 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBSchema   string
-	AppKey        string
 	Port          string
 	ReposDir      string
 	AdminPassword string
@@ -47,7 +46,6 @@ func Load() (*Config, error) {
 		DBPassword: getEnv("DB_PASSWORD", ""),
 		DBName:     getEnv("DB_NAME", "deployment_logs"),
 		DBSchema:   getEnv("DB_SCHEMA", "deploymentlogs"),
-		AppKey:        getEnv("APP_KEY", ""),
 		Port:          getEnv("PORT", "3000"),
 		ReposDir:      getEnv("REPOS_DIR", "./repos"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", "admin"),

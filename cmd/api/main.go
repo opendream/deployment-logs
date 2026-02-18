@@ -63,7 +63,7 @@ func main() {
 	// Public routes
 	app.Post(bp+"/api/auth/login", handlers.Login(db, cfg.JWTSecret))
 	app.Get(bp+"/api/public/logs/repo/:repo_name", handlers.GetLogsByRepo(db))
-	app.Post(bp+"/api/public/trigger", middleware.APIKeyAuth(cfg), handlers.Trigger(db, cfg))
+	app.Post(bp+"/api/public/trigger", middleware.APIKeyAuth(db), handlers.Trigger(db, cfg))
 
 	// Public read routes (with optional auth so frontend knows if user is admin)
 	optAuth := app.Group(bp+"/api", middleware.OptionalJWTAuth(cfg.JWTSecret))
@@ -88,8 +88,8 @@ func main() {
 	admin.Delete("/logs/repo/:repo_name", handlers.ClearLogsByRepo(db))
 
 	settings := admin.Group("/settings")
-	settings.Get("/", handlers.GetSettings(cfg))
-	settings.Put("/", handlers.UpdateSettings(cfg))
+	settings.Get("/", handlers.GetSettings(db))
+	settings.Put("/", handlers.UpdateSettings(db))
 
 	// Static assets
 	app.Static(bp+"/assets", "./web/dist/assets")
